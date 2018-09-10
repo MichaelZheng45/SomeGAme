@@ -161,7 +161,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -190,6 +190,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1178634889
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4235480954209022, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 2.8118255
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235480954209022, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1.5042692
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235480954209022, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235480954209022, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235480954209022, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235480954209022, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235480954209022, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4235480954209022, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &1721849393
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,6 +244,7 @@ GameObject:
   - component: {fileID: 1721849395}
   - component: {fileID: 1721849394}
   - component: {fileID: 1721849398}
+  - component: {fileID: 1721849399}
   m_Layer: 0
   m_Name: RobotTemplate
   m_TagString: Untagged
@@ -220,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d12619c1c46f3d040a23c48df1c34f25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 0.1
+  playerSpeed: 0.2
 --- !u!61 &1721849395
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -316,3 +359,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83dc9016e0104fe4eb004a41e1800ec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1721849399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1721849393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3b1f19be086a1d4db2009993b448345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponNameArray:
+  - 
+  weaponProjectile:
+  - {fileID: 1583184695015088, guid: 0177063f164e6c64eb8ba0df906cf4d1, type: 2}
+  offset: 0.5
+  armVisuals:
+  - {fileID: 0}
+  weaponFireRateList: 0a000000
+  weaponSpreadArray: 0a000000
