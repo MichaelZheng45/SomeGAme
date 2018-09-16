@@ -7,7 +7,7 @@ public class TemporaryBulletScript : MonoBehaviour {
     int count = 0;
 	// Use this for initialization
 	void Start () {
-        gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up *500);
+        gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up *1500);
 	}
 	
 	// Update is called once per frame
