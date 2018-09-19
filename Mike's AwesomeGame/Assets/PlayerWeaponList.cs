@@ -76,7 +76,6 @@ public class PlayerWeaponList : MonoBehaviour {
         //find the player rotation then create the location with offset, if left then minus offset.
         Vector2 projectileSpawnLoc;
         float rotation = gameObject.transform.rotation.eulerAngles.z;
-        Debug.Log(rotation);
 
         if(arm == "right")
         {

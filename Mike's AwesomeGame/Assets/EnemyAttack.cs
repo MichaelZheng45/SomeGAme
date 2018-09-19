@@ -23,7 +23,6 @@ public class EnemyAttack : MonoBehaviour {
 
         if((GameObject.FindGameObjectWithTag("Player").transform.position - transform.position).magnitude < 15)
         {
-            Debug.Log("Attack");
             //ask for permision to attack
             canAttack = true;
         }
@@ -36,10 +35,6 @@ public class EnemyAttack : MonoBehaviour {
         {
             attackPlayer();
         } 
-        else
-        {
-            currTime = 0;
-        }
 	}
 
     void attackPlayer()
