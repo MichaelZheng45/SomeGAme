@@ -29,14 +29,14 @@ public class PlayerWeaponList : MonoBehaviour {
     //Parts
     public int[] rightWeaponParts;
     public int[] leftWeaponParts;
-    bool placePartonRight;
+    bool placePartOnRight; //a toggle to place part on right or left arm
 
     /*
      
     */
 	// Use this for initialization
 	void Start () {
-        placePartonRight = true;
+        placePartOnRight = true;
         rightWeapon = 6;
         leftWeapon = rightWeapon;
         rightFireRate = weaponFireRateList[0];
@@ -90,11 +90,12 @@ public class PlayerWeaponList : MonoBehaviour {
         }
 
         //base, it is if statement to the weapon id
-        if(whichweapon == 0) //#6 The Rapid
+        if(whichweapon == 0) //#6 The Rapid //0for temporary measures
         {
             rotation = transform.rotation.eulerAngles.z + Random.Range(weaponSpreadArray[whichweapon] * -1f, weaponSpreadArray[whichweapon]);
             projectileSpawnLoc = new Vector2(gameObject.transform.position.x + projectileSpawnLoc.x, gameObject.transform.position.y + projectileSpawnLoc.y);
             GameObject newProjectile = Instantiate(weaponProjectile[whichweapon], projectileSpawnLoc, Quaternion.Euler(0, 0, rotation)) as GameObject;
+            newProjectile.GetComponent<TemporaryBulletScript>().targetPlayer = false;
         }                                                         
         
     }
