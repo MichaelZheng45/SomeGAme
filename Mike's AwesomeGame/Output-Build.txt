@@ -1,0 +1,4 @@
+﻿1>------ Build started: Project: Assembly-CSharp, Configuration: Debug Any CPU ------
+1>C:\Users\micha\OneDrive\Documents\GitHub\SomeGAme\Mike's AwesomeGame\Assets\PlayerWeaponList.cs(33,10,33,26): warning CS0414: The field 'PlayerWeaponList.placePartOnRight' is assigned but its value is never used
+1>  Assembly-CSharp -> C:\Users\micha\OneDrive\Documents\GitHub\SomeGAme\Mike's AwesomeGame\Temp\bin\Debug\Assembly-CSharp.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
