@@ -21,8 +21,8 @@ public class ShatterProjectile : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void FixedUpdate()
+	{
         count++;
         if (count >60)
         {

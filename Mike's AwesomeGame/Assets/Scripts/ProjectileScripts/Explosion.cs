@@ -16,13 +16,20 @@ public class Explosion : MonoBehaviour {
     public GameObject ripperBomb;
 
     public Color[] fireColor = new Color[6];
-
+	public GameObject particle;
+	ParticleSystem particleSys;
     public int secondCount = 0;
 	void Start () {
+
+		if (particle != null)
+		{
+			particleSys = particle.GetComponent<ParticleSystem>();
+			particleSys.enableEmission = false;
+		}
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate() {
 		if(activated)
         {
             count++;
@@ -44,14 +51,20 @@ public class Explosion : MonoBehaviour {
 
     public void activateExplosion(bool ripperCheck = false)
     {
-        if(ripperCheck)
+        transform.parent = null;
+        if (ripperCheck)
         {
             isRipperBomb = true;
             gameObject.GetComponent<SpriteRenderer>().color = fireColor[Random.Range(0, 6)];
         }
+
+		if(particle != null)
+		{
+			particleSys.enableEmission = true;
+		}
         activated = true;
         gameObject.GetComponent<SpriteRenderer>().sprite = explosionSp;
-        transform.parent = null;
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -16,7 +16,7 @@ public class PlayerAim : MonoBehaviour {
 
     void modifyRotation()
     {
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		Vector2 mousePos = gameManager.Instance.mousePos();
         float hypo = Vector2.Distance(mousePos, gameObject.transform.position);
         float xDistance = mousePos.x - transform.position.x;
         float theta = Mathf.Acos(xDistance / hypo) * (180 / Mathf.PI);

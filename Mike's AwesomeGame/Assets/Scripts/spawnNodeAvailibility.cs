@@ -4,29 +4,16 @@ using UnityEngine;
 
 public class spawnNodeAvailibility : MonoBehaviour {
 
-    bool spawnAvailable = true;
-    public int XBounds, YBounds;
-	// Use this for initialization
-	void Start () {
 
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        float xPos = gameObject.transform.position.x;
-        float yPos = gameObject.transform.position.y;
-		if(xPos > XBounds || xPos < -XBounds || yPos < -YBounds || yPos > YBounds)
-        {
-            spawnAvailable = false;
-        }
-        else
-        {
-            spawnAvailable = true;
-        }
+	private void OnTriggerExit2D(Collider2D collision)
+	{
+		if(collision.tag == "despawner")
+		EnemySpawner.Instance.addNewPoint(gameObject);		
 	}
 
-    public bool canSpawn()
-    {
-        return spawnAvailable;
-    }
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.tag == "despawner")
+			EnemySpawner.Instance.removePoint(gameObject);
+	}
 }

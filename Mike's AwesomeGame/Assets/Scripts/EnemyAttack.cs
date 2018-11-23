@@ -13,10 +13,9 @@ public class EnemyAttack : MonoBehaviour {
     public float maxTime;
 
     public GameObject spawnLocation;
-    float countWarudoCount = 0;
-    bool timeStop = false;
     GameObject player;
     public int range;
+
 	// Use this for initialization
 	void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -25,27 +24,11 @@ public class EnemyAttack : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        if (timeStop)
-        {
-            countWarudoCount += Time.deltaTime;
-            if (countWarudoCount > 2)
-            {
-                timeStop = false;
-            }
-        }
-        else
-        {
-            attackPattern();
-        }
+        attackPattern();
+        
 
 	}
 
-    public void activateZaWarudo()
-    {
-        timeStop = true;
-        countWarudoCount = 0;
-    }
 
     void attackPattern()
     {
@@ -74,10 +57,9 @@ public class EnemyAttack : MonoBehaviour {
         {
             //fire bullet
             float rotation = transform.rotation.eulerAngles.z + Random.Range(accuracy * -1f, accuracy);
-            GameObject newProjectile = Instantiate(enemyAttackBullet, spawnLocation.transform.position, Quaternion.Euler(0, 0, rotation)) as GameObject;
+			GameObject newProjectile = Instantiate(enemyAttackBullet, spawnLocation.transform.position, Quaternion.Euler(0, 0, rotation));
             newProjectile.GetComponent<TemporaryBulletScript>().targetPlayer = true;
-
-            currTime = 0;
+			currTime = 0;
         }
     }
 }

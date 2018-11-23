@@ -17,8 +17,8 @@ public class RocketScript : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        targetLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        curRot = gameObject.transform.rotation.eulerAngles.z + 90;
+		targetLocation = gameManager.Instance.mousePos();
+		curRot = gameObject.transform.rotation.eulerAngles.z - 90;
         if (!isRipper && !isHive)
         {
             gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * velocity);
@@ -26,28 +26,29 @@ public class RocketScript : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void FixedUpdate()
+	{
         if(!isRipper && !isHive)
         {
             count++;
             if (count > 100)
             {
-                explosion.GetComponent<Explosion>().activateExplosion();
+				soundManage.Instance.weaponSounds(weaponSound.ROCKET, true);
+				explosion.GetComponent<Explosion>().activateExplosion();
                 Destroy(gameObject);
             }
         }
         else if(isRipper)//ripper attack
         {
             Vector2 distance = (Vector2)transform.position - targetLocation;
-            if (distance.magnitude < .6)
+            if (distance.magnitude < 1.5)
             {
+				soundManage.Instance.weaponSounds(weaponSound.RIPPER, true);
                 explosion.GetComponent<Explosion>().activateExplosion(true);
-                
                 Destroy(gameObject);
             }
 
-            distance = distance.normalized * .6f;
+            distance = distance.normalized * nonRocketVelocity;
             gameObject.transform.position -= (Vector3)distance;
         }
         else //hiveAttack
@@ -55,7 +56,8 @@ public class RocketScript : MonoBehaviour {
             count++;
             if (count > 100)
             {
-                explosion.GetComponent<Explosion>().activateExplosion();
+				soundManage.Instance.weaponSounds(weaponSound.HIVE, true);
+				explosion.GetComponent<Explosion>().activateExplosion();
                 Destroy(gameObject);
             }
 
@@ -122,13 +124,14 @@ public class RocketScript : MonoBehaviour {
         if (collision.gameObject.tag == "Enemy" && !isRipper)
         {
             collision.gameObject.GetComponent<EnemyHealth>().ReduceHealthPoints(damage);
-            explosion.GetComponent<Explosion>().activateExplosion();
-            Destroy(gameObject);
+			count = 300;
         }
         else if (collision.gameObject.tag == "Wall")
         {
-            explosion.GetComponent<Explosion>().activateExplosion();
-            Destroy(gameObject);
-        }
+			if(!isHive)
+			{
+				count = 300;
+			}
+		}
     }
 }

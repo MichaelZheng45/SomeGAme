@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerWeaponList : MonoBehaviour {
 
     int timer; //the time left before the weapon dematerializes
@@ -12,9 +12,15 @@ public class PlayerWeaponList : MonoBehaviour {
     public List<string> weaponNameArray; //string list of all weapons, helps remember which weapon is which
     public List<GameObject> weaponProjectile; //prefab for the projectile //***********Gonna be redone so it uses a bullet bank if possible
 
+	public GameObject leftSpawnPosition, rightSpawnPosition;
+
     //VISUAL
     public GameObject rightArmVisual, leftArmVisual;
     public List<Sprite> armVisuals;
+
+	//ammoCount
+	public int leftAmmo, rightAmmo;
+	public List<int> weaponAmmo;
 
     //FIRE RATE
     public List<int> weaponFireRateList;
@@ -28,106 +34,376 @@ public class PlayerWeaponList : MonoBehaviour {
     public List<int> weaponSpreadArray;
 
     //Parts
-    public int[] rightWeaponParts;
-    public int[] leftWeaponParts;
-    bool placePartOnRight; //a toggle to place part on right or left arm
+    public List<int> rightWeaponParts;
+    public List<int> leftWeaponParts;
 
-    /*
-     
-    */
+    //scoring
+    GameObject scoreSpawner;
+    int baseScore = 10;
+
+
+    //ui
+    public List<Sprite> partSprites;
+	
+	int newPart = -1;
+
+	public Image partHolder;
+	public Text leftPossibility;
+	public Text rightPossibility;
+	public Image leftWeaponImage;
+	public Image rightWeaponImage;
+
+	public Sprite emptyHolder;
+	public List<Sprite> weaponIcons;
 	// Use this for initialization
 	void Start () {
-        placePartOnRight = true;
+        scoreSpawner = GameObject.FindGameObjectWithTag("scorer");
+		rightAmmo = weaponAmmo[rightWeapon];
+		leftAmmo = weaponAmmo[leftWeapon];
+	}
 
-    }
-	
+	private void Update()
+	{
+		float rotation = gameObject.transform.rotation.eulerAngles.z;
+		Debug.Log(rotation);
+		//rightArmVisual,leftarmvisual will change by choosing from the sprite list
+		rightArmVisual.GetComponent<SpriteRenderer>().sprite = armVisuals[rightWeapon];
+		leftArmVisual.GetComponent<SpriteRenderer>().sprite = armVisuals[leftWeapon];
+
+		//firing weapon
+		if (Input.GetMouseButton(0) && leftCurrentFireCount > leftFireRate && (leftAmmo > 0 || leftWeapon == 0)) //left button
+		{
+			fireWeapon("left", leftWeapon);
+			leftCurrentFireCount = 0;
+			leftAmmo--;
+
+			if (leftWeapon != 0)
+			{
+				gameManager.Instance.setLeftAmmoCount(leftAmmo, weaponAmmo[leftWeapon]);
+			}
+			else
+			{
+				gameManager.Instance.setLeftAmmoCount(1, 1);
+			}
+
+			soundManage.Instance.weaponSounds((weaponSound)leftWeapon);
+		}
+
+		if (Input.GetMouseButton(1) && rightCurrentFireCount > rightFireRate && (rightAmmo > 0 || rightWeapon == 0)) //right button
+		{
+			fireWeapon("right", rightWeapon);
+			rightCurrentFireCount = 0;
+			rightAmmo--;
+
+			if(rightWeapon != 0)
+			{
+				gameManager.Instance.setRightAmmoCount(rightAmmo, weaponAmmo[rightWeapon]);
+			}
+			else
+			{
+				gameManager.Instance.setRightAmmoCount(1, 1);
+			}
+
+			soundManage.Instance.weaponSounds((weaponSound)rightWeapon);
+		}
+
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			soundManage.Instance.useSound(sounds.GUNCOCK);
+			newPart = -1;
+			leftWeapon = 0;
+			rightWeapon = 0;
+		}
+
+		seePossibilities(newPart);
+
+		if(newPart > -1)
+		{
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				soundManage.Instance.useSound(sounds.GUNCOCK);
+				addPart(newPart, false);
+				newPart = -1;
+				leftAmmo = weaponAmmo[leftWeapon];
+
+				if (leftWeapon != 0)
+				{
+					gameManager.Instance.setLeftAmmoCount(leftAmmo, weaponAmmo[leftWeapon]);
+				}
+				else
+				{
+					gameManager.Instance.setLeftAmmoCount(1, 1);
+				}
+			}
+			else if (Input.GetKeyDown(KeyCode.E))
+			{
+				soundManage.Instance.useSound(sounds.GUNCOCK);
+				addPart(newPart, true);
+				newPart = -1;
+				rightAmmo = weaponAmmo[rightWeapon];
+
+				if (rightWeapon != 0)
+				{
+					gameManager.Instance.setRightAmmoCount(rightAmmo, weaponAmmo[rightWeapon]);
+				}
+				else
+				{
+					gameManager.Instance.setRightAmmoCount(1, 1);
+				}
+			}
+		}
+
+		
+
+	}
 	// Update is called once per frame
 	void FixedUpdate () {
-        //rightArmVisual,leftarmvisual will change by choosing from the sprite list
-        rightArmVisual.GetComponent<SpriteRenderer>().sprite = armVisuals[rightWeapon];
-        leftArmVisual.GetComponent<SpriteRenderer>().sprite = armVisuals[leftWeapon];
 
+        //for fire rate
         rightFireRate = weaponFireRateList[rightWeapon];
         leftFireRate = weaponFireRateList[leftWeapon];
-
         rightCurrentFireCount++;
-        leftCurrentFireCount++;      
-     
-		if(Input.GetMouseButton(0) && leftCurrentFireCount > leftFireRate) //left button
-        {
-            fireWeapon("left",leftWeapon); 
-            leftCurrentFireCount = 0;
-        }
+        leftCurrentFireCount++;
+	}
 
-        if(Input.GetMouseButton(1) && rightCurrentFireCount > rightFireRate) //right button
-        {
-            fireWeapon("right",rightWeapon); 
-            rightCurrentFireCount = 0;
-        }
+	void seePossibilities(int index)
+	{
+		int id = index;
+	
+		if(index == -1)
+		{
+			partHolder.sprite = emptyHolder;
+			leftPossibility.text = null;
+			rightPossibility.text = null;
+			leftWeaponImage.sprite = emptyHolder;
+			rightWeaponImage.sprite = emptyHolder;
+		}
+		else
+		{
+			int zero = 0, one = 0, two = 0, three = 0, four = 0;
+			rightWeaponParts.Add(id);
+			int rightTotal = 0;
+			for (int i = 1; i < 4; i++)
+			{
+				switch (rightWeaponParts[i])
+				{
+					case 0:
+						zero++;
+						break;
+					case 1:
+						one++;
+						break;
+					case 2:
+						two++;
+						break;
+					case 3:
+						three++;
+						break;
+					case 4:
+						four++;
+						break;
+				}
+			}
 
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            leftWeapon++;
-            rightWeapon++;
-            if(leftWeapon > 9 || rightWeapon > 9)
-            {
-                leftWeapon = 0;//leftweapon %= array.lemgth
-                rightWeapon = 0;
-            }
-        }
+			if (one != 0)
+			{
+				rightTotal += 1;
+			}
+
+			if (two != 0)
+			{
+				rightTotal += 2;
+			}
+
+			if (three != 0)
+			{
+				rightTotal += 3;
+			}
+
+			if (four != 0)
+			{
+				rightTotal += 4;
+			}
+			rightWeaponParts.RemoveAt(3);
+
+			//forleft
+			zero = 0; one = 0; two = 0; three = 0; four = 0;
+			leftWeaponParts.Add(id);
+			int leftTotal = 0;
+			for (int i = 1; i < 4; i++)
+			{
+				switch (leftWeaponParts[i])
+				{
+					case 0:
+						zero++;
+						break;
+					case 1:
+						one++;
+						break;
+					case 2:
+						two++;
+						break;
+					case 3:
+						three++;
+						break;
+					case 4:
+						four++;
+						break;
+				}
+			}
+
+			if (one != 0)
+			{
+				leftTotal += 1;
+			}
+
+			if (two != 0)
+			{
+				leftTotal += 2;
+			}
+
+			if (three != 0)
+			{
+				leftTotal += 3;
+			}
+
+			if (four != 0)
+			{
+				leftTotal += 4;
+			}
+			leftWeaponParts.RemoveAt(3);
+
+			//do UI
+			partHolder.sprite = partSprites[index];
+			leftPossibility.text = weaponNameArray[leftTotal];
+			rightPossibility.text = weaponNameArray[rightTotal];
+			leftWeaponImage.sprite = weaponIcons[leftTotal];
+			rightWeaponImage.sprite = weaponIcons[rightTotal];
+		}
+	
+}
+
+	public void addPart(int index, bool onRight)
+	{
+		int id = index;
+		int zero = 0, one = 0, two = 0, three = 0, four = 0;
+		int total = 0;
+		if (onRight)
+		{
+			rightWeaponParts.RemoveAt(0);
+			rightWeaponParts.Add(id);
+
+			for (int i = 0; i < 3; i++)
+			{
+				switch (rightWeaponParts[i])
+				{
+					case 0:
+						zero++;
+						break;
+					case 1:
+						one++;
+						break;
+					case 2:
+						two++;
+						break;
+					case 3:
+						three++;
+						break;
+					case 4:
+						four++;
+						break;
+				}
+			}
+
+		}
+		else
+		{
+			leftWeaponParts.RemoveAt(0);
+			leftWeaponParts.Add(id);
+
+			for (int i = 0; i < 3; i++)
+			{
+				switch (leftWeaponParts[i])
+				{
+					case 0:
+						zero++;
+						break;
+					case 1:
+						one++;
+						break;
+					case 2:
+						two++;
+						break;
+					case 3:
+						three++;
+						break;
+					case 4:
+						four++;
+						break;
+				}
+			}
+		}
+
+		if (one != 0)
+		{
+			total += 1;
+		}
+
+		if (two != 0)
+		{
+			total += 2;
+		}
+
+		if (three != 0)
+		{
+			total += 3;
+		}
+
+		if (four != 0)
+		{
+			total += 4;
+		}
+		Debug.Log("Zero: " + zero + "One:" + one + " two: " + two + " three: " + three + " Four: " + four + " OnRight: " + onRight);
+		if (onRight)
+		{
+			rightWeapon = total;
+		}
+		else
+		{
+			leftWeapon = total;
+		}
 	}
 
     void fireWeapon(string arm, int whichweapon)
     {
         //find the player rotation then create the location with offset, if left then minus offset.
         Vector2 projectileSpawnLoc;
-        float rotation = gameObject.transform.rotation.eulerAngles.z;
-
+		float rotation = gameObject.transform.rotation.eulerAngles.z;
         if (arm == "right")
         {
-            projectileSpawnLoc = new Vector2(Mathf.Cos(rotation * Mathf.PI / 180) * offset,
-               Mathf.Sin(rotation * (Mathf.PI / 180)) * offset);
+			projectileSpawnLoc = rightSpawnPosition.transform.position;
         }
         else
         {
-            projectileSpawnLoc = new Vector2(Mathf.Cos((rotation + 180) * Mathf.PI / 180) * offset,
-                Mathf.Sin((rotation + 180) * Mathf.PI / 180) * offset);
+			projectileSpawnLoc = leftSpawnPosition.transform.position;
         }
-
-        if (whichweapon != 0)
+    
+        rotation += Random.Range(weaponSpreadArray[whichweapon] * -1f, weaponSpreadArray[whichweapon]);
+        GameObject newProjectile = Instantiate(weaponProjectile[whichweapon], projectileSpawnLoc, Quaternion.Euler(0, 0, rotation)) as GameObject;
+        if (newProjectile.GetComponent<TemporaryBulletScript>() != null)
         {
-            rotation = transform.rotation.eulerAngles.z + Random.Range(weaponSpreadArray[whichweapon] * -1f, weaponSpreadArray[whichweapon]);
-            projectileSpawnLoc = new Vector2(gameObject.transform.position.x + projectileSpawnLoc.x, gameObject.transform.position.y + projectileSpawnLoc.y);
-            GameObject newProjectile = Instantiate(weaponProjectile[whichweapon], projectileSpawnLoc, Quaternion.Euler(0, 0, rotation)) as GameObject;
-            if (newProjectile.GetComponent<TemporaryBulletScript>() != null)
-            {
-                newProjectile.GetComponent<TemporaryBulletScript>().targetPlayer = false;
-            }
-        }
-        else //ZZZAAAAAA WWWWAAAAARRRRRUUUUUUDDDOOOOOOOOO
-        {
-            Instantiate(weaponProjectile[whichweapon], transform.position, Quaternion.Euler(new Vector3(0, 0, 0)));
-            foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Enemy"))
-            {
-                fooObj.GetComponent<EnemyRobotPatterns>().activateZaWarudo();
-                fooObj.GetComponent<EnemyAttack>().activateZaWarudo();
-
-            }
-            foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Projectile"))
-            {
-                if (fooObj.GetComponent<TemporaryBulletScript>() != null)
-                {
-                    fooObj.GetComponent<TemporaryBulletScript>().activateZaWarudo();
-                }
-            }
+            newProjectile.GetComponent<TemporaryBulletScript>().targetPlayer = false;
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "pickup")
+        if (collision.gameObject.tag == "pickup")
         {
-            //add new part and place new weapon
+			gameManager.Instance.addScore(30);
+			newPart = collision.gameObject.GetComponent<PartsScript>().partID;
+			GetComponent<PlayerHealth>().reduceHealthPoints(0); //heals 1 hp
+            Destroy(collision.gameObject);
         }
     }
 }

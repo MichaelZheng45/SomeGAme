@@ -24,9 +24,6 @@ public class EnemyRobotPatterns : MonoBehaviour {
     //player
     GameObject player;
 
-    //zawarudo
-    float countWarudoCount = 0;
-    bool timeStop = false;
 	// Use this for initialization
 	void Start () {
 
@@ -41,30 +38,13 @@ public class EnemyRobotPatterns : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
-        //getComponent script of robot health, if it is disabled, the it won't activate the script
+	void FixedUpdate() { 
+		//getComponent script of robot health, if it is disabled, the it won't activate the script
 
- 
-        if(timeStop)
-        {
-            countWarudoCount+= Time.deltaTime;
-            if(countWarudoCount >2)
-            {
-                timeStop = false;
-            }
-        }
-        else
-        {
-            robotAttackPatterns();
-            chooseNewPattern();
-        }
+		robotAttackPatterns();
+        chooseNewPattern();
+        
 	}
-
-    public void activateZaWarudo()
-    {
-        timeStop = true;
-        countWarudoCount = 0;
-    }
 
     void robotAttackPatterns()
     {

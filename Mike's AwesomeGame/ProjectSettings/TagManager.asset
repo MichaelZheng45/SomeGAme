@@ -9,6 +9,9 @@ TagManager:
   - Projectile
   - EnemyManager
   - SpawnNodes
+  - pickup
+  - scorer
+  - despawner
   layers:
   - Default
   - TransparentFX
@@ -18,7 +21,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - pathWall
   - 
   - 
   - 
@@ -43,9 +46,27 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 619252483
+    locked: 0
+  - name: bloodlayer
+    uniqueID: 2912382057
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: enemylayer
+    uniqueID: 3193178857
+    locked: 0
+  - name: Smoke
+    uniqueID: 3830264491
+    locked: 0
+  - name: PLayer
+    uniqueID: 2281049523
+    locked: 0
   - name: arms
     uniqueID: 1189398845
+    locked: 0
+  - name: Mist
+    uniqueID: 671928921
     locked: 0

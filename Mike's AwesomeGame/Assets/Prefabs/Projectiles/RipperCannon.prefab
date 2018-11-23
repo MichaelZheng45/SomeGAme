@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4538380700340868}
   - component: {fileID: 212434078108076318}
-  - component: {fileID: 61961537731619948}
   - component: {fileID: 50364583775279742}
   - component: {fileID: 114577873730771654}
+  - component: {fileID: 58015987999448376}
   m_Layer: 0
   m_Name: RipperCannon
   m_TagString: Projectile
@@ -55,8 +55,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1165561723370332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.139646, y: 1.3933101, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalPosition: {x: 48.62, y: -4.18, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 4965163177806232}
   m_Father: {fileID: 0}
@@ -95,6 +95,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!58 &58015987999448376
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1165561723370332}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!58 &58947620071030640
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -110,31 +125,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!61 &61961537731619948
-BoxCollider2D:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1165561723370332}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!114 &114555753541887810
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -148,19 +138,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionSp: {fileID: 21300000, guid: 05e553e8f969d4049b76cafa66020f03, type: 3}
   activated: 0
-  damage: 20
-  spreadRate: 0.25
-  maxSize: 25
+  damage: 15
+  spreadRate: 0.5
+  maxSize: 10
   count: 0
   isRipperBomb: 0
   ripperBomb: {fileID: 1158490311326340, guid: cfce1b886d10daf4e8382394e2a60ce5, type: 2}
   fireColor:
-  - {r: 0.7830189, g: 0.30766732, b: 0.25485048, a: 1}
-  - {r: 0.7169812, g: 0.1318975, b: 0.1318975, a: 1}
-  - {r: 0.8962264, g: 0.2494215, b: 0.2494215, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0.8207547, g: 0.06581525, b: 0.06581525, a: 1}
-  - {r: 1, g: 0.19574015, b: 0.15566039, a: 1}
+  - {r: 0.78431374, g: 0.25490195, b: 0.6977939, a: 1}
+  - {r: 0.32751343, g: 0.13333333, b: 0.7176471, a: 1}
+  - {r: 0.2509804, g: 0.44397384, b: 0.8980392, a: 1}
+  - {r: 0, g: 0.9489832, b: 1, a: 1}
+  - {r: 0.37617165, g: 0.06666667, b: 0.81960785, a: 1}
+  - {r: 0.15686274, g: 1, b: 0.6365188, a: 1}
   secondCount: 0
 --- !u!114 &114577873730771654
 MonoBehaviour:
@@ -177,7 +167,7 @@ MonoBehaviour:
   isRipper: 1
   isHive: 0
   velocity: 1500
-  nonRocketVelocity: 0
+  nonRocketVelocity: 1
   explosion: {fileID: 1617085518649168}
 --- !u!212 &212434078108076318
 SpriteRenderer:
@@ -214,7 +204,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 16239b6f175ced6448bdf0b063df1d72, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6671b4e01a9640b4e9634fe4e3b3d871, type: 3}
   m_Color: {r: 0.90196085, g: 0.74509805, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -261,7 +251,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
-  m_Color: {r: 0.990566, g: 0.098122105, b: 0.23136534, a: 1}
+  m_Color: {r: 0.990566, g: 0.023362402, b: 0.7318511, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

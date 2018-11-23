@@ -14,20 +14,14 @@ public class StormWave : MonoBehaviour {
     public List<GameObject> GOenemies;
     GameObject player;
 
+	bool initial = true;
 	// Use this for initialization
 	void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
 
-        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Enemy"))
+        foreach (GameObject fooObj in GameObject.FindGameObjectsWithTag("Enemy")) //temp
         {
-            if (Mathf.Abs(player.transform.position.x - fooObj.transform.position.x) < 18 && Mathf.Abs(player.transform.position.y - fooObj.transform.position.y) < 15)
-            {
-
-               GOenemies.Add(fooObj);
-                
-
-            }
-
+			GOenemies.Add(fooObj);
         }
     }
 	
@@ -47,29 +41,30 @@ public class StormWave : MonoBehaviour {
             }
         }
 
-            if (GOenemies.Count != 0)
+        if (GOenemies.Count != 0)
         {
-            GameObject newLaser = Instantiate(stormInLine, transform.position, transform.rotation);
-            newLaser.GetComponent<ElectricInline>().updatePointOne(transform.position);
 
-            GameObject target = GetClosestEnemy(GOenemies);
+			GameObject newLaser = Instantiate(stormInLine, transform.position, transform.rotation);
+			newLaser.GetComponent<ElectricInline>().updatePointOne(transform.position);
+			GameObject target = GetClosestEnemy(GOenemies);
 
-            transform.position = target.transform.position;
+			if (maxAttack <= 0 || target == null)
+			{
+				newLaser.GetComponent<ElectricInline>().updatePointTwoValues(transform.position + new Vector3(.1f,.1f,0));
+				Destroy(gameObject);
+	
+			}
 
+			Vector2 pos = target.transform.position;
+			transform.position = pos;
+
+			newLaser.GetComponent<ElectricInline>().updatePointTwoValues(transform.position);
+			EnemySpawner.Instance.emitStorm(pos);
             count = 0;
             maxAttack--;
             target.gameObject.GetComponent<EnemyHealth>().ReduceHealthPoints(damage);
 
-                
-
-            if (maxAttack <= 0)
-            {
-                Destroy(gameObject);
-            }
-
             GOenemies.Remove(target);
-            
-            newLaser.GetComponent<ElectricInline>().updatePointTwoValues(transform.position);
         }
 	}
 
@@ -85,15 +80,24 @@ public class StormWave : MonoBehaviour {
                 return null;
             }
 
-            Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
+			Vector3 directionToTarget = potentialTarget.transform.position - currentPosition;
+			
+			if (initial)
+			{
+				directionToTarget = (Vector2)potentialTarget.transform.position - gameManager.Instance.mousePos();
+			}
+			
+
             float dSqrToTarget = directionToTarget.sqrMagnitude;
-            if (dSqrToTarget < closestDistanceSqr )
+			float distance = directionToTarget.magnitude;
+            if (dSqrToTarget < closestDistanceSqr && distance < 8)
             {
+	
                 closestDistanceSqr = dSqrToTarget;
                 bestTarget = potentialTarget;
             }
         }
-
-        return bestTarget;
+		initial = false;
+		return bestTarget;
     }
 }

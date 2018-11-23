@@ -12,16 +12,17 @@ public class DragonFire : MonoBehaviour {
 
     public float spreadRate;
     public int maxSize;
+	Rigidbody2D rigidB;
     // Use this for initialization
     void Start()
     {
-        gameObject.GetComponent<Rigidbody2D>().AddForce(transform.up * velocity);
-        gameObject.GetComponent<SpriteRenderer>().color = fireColor[Random.Range(0, 6)];
-    }
+		rigidB = gameObject.GetComponent<Rigidbody2D>();
+		rigidB.AddForce(transform.up * velocity); 
+	}
 
     // Update is called once per frame
-    void Update()
-    {
+    void FixedUpdate()
+	{
         count++;
         if (count > maxSize)
         {
@@ -39,7 +40,7 @@ public class DragonFire : MonoBehaviour {
         }
         else if (collision.gameObject.tag == "Wall")
         {
-            Destroy(gameObject);
+			rigidB.velocity *= 0;
         }
     }
 }

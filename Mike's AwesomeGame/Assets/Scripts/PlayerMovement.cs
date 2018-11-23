@@ -5,36 +5,36 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
 
 	public float playerSpeed;
-
+	Rigidbody2D rb;
 	// Use this for initialization
 	void Start () {
-		
+		rb = GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void FixedUpdate()
+	{
 		float playerX = gameObject.transform.position.x;
 		float playerY = gameObject.transform.position.y;
+		Vector2 newVector = new Vector2(0, 0);
+
 		if(Input.GetKey(KeyCode.A))
 		{
-			gameObject.transform.position = new Vector2(playerX - playerSpeed, playerY );
-            playerX = gameObject.transform.position.x;
+			newVector.x += -playerSpeed;
         }
 		if(Input.GetKey(KeyCode.S))
 		{
-			gameObject.transform.position = new Vector2(playerX ,playerY - playerSpeed);
-            playerY = gameObject.transform.position.y;
+			newVector.y += -playerSpeed;
         }
 		if(Input.GetKey(KeyCode.D))
 		{
-			gameObject.transform.position = new Vector2(playerX + playerSpeed,playerY);
-            playerX = gameObject.transform.position.x;
+			newVector.x += playerSpeed;
         }
 		if(Input.GetKey(KeyCode.W))
 		{
-			gameObject.transform.position = new Vector2(playerX,playerY + playerSpeed);
-            playerY = gameObject.transform.position.y;
+			newVector.y += playerSpeed;
         }
+
+		rb.velocity = newVector;
 	}
 }
