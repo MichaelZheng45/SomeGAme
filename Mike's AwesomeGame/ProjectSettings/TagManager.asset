@@ -12,6 +12,7 @@ TagManager:
   - pickup
   - scorer
   - despawner
+  - shootableWall
   layers:
   - Default
   - TransparentFX

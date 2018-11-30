@@ -65,7 +65,6 @@ public class PlayerWeaponList : MonoBehaviour {
 	private void Update()
 	{
 		float rotation = gameObject.transform.rotation.eulerAngles.z;
-		Debug.Log(rotation);
 		//rightArmVisual,leftarmvisual will change by choosing from the sprite list
 		rightArmVisual.GetComponent<SpriteRenderer>().sprite = armVisuals[rightWeapon];
 		leftArmVisual.GetComponent<SpriteRenderer>().sprite = armVisuals[leftWeapon];

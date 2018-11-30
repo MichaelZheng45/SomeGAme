@@ -68,7 +68,7 @@ public  class nodeData
 						if ((int)index.x + x - 1 > maxArrayIndex || (int)index.x + x - 1 < 0 || (int)index.y + y - 1 > maxArrayIndex || (int)index.y + y - 1 < 0)
 						{
 							adjacent[x, y] = false;
-						}
+						}//dont want diagonal
 						else
 						{
 							neighbors[x, y] = meshList[(int)index.x + x - 1, (int)index.y + y - 1];
@@ -129,12 +129,16 @@ public class CreateMesh : MonoBehaviour {
 	public GameObject generators;
 	public GameObject nodeSpanwers;
 	public GameObject wall;
+	public GameObject shootableWall;
 	public Transform targetTransform;
 
+	Vector2 pos;
+
+	public List<string> maps;
 	// Use this for initialization
 	void Start () {
 		meshList = new nodeData[size, size];
-		StreamReader reader = new StreamReader("Assets/dataMap.txt");
+		StreamReader reader = new StreamReader("MapAssets/" + maps[Random.Range(0,maps.Count)] + ".txt");
 
 		//spawn all the nodes
 		for (int rows = size - 1; rows >= 0;rows--)
@@ -161,6 +165,11 @@ public class CreateMesh : MonoBehaviour {
 				{
 					newNode = new nodeData(true, newPos, new Vector2(cols, rows), size);
 					Instantiate(wall, newPos, transform.rotation, gameObject.transform);
+				}
+				else if(type == '4')
+				{
+					newNode = new nodeData(true, newPos, new Vector2(cols, rows), size);
+					Instantiate(shootableWall, newPos, transform.rotation, gameObject.transform);
 				}
 				else
 				{
@@ -250,7 +259,7 @@ public class CreateMesh : MonoBehaviour {
 
 	void doFlow(float range)
 	{
-		Vector2 pos = targetTransform.position;
+		pos = targetTransform.position;
 
 
 		List<nodeData> openList = new List<nodeData>();
@@ -286,14 +295,17 @@ public class CreateMesh : MonoBehaviour {
 							{
 								nodeData newNode = meshList[(int)curNode.index.x + x - 1, (int)curNode.index.y + y - 1];
 								Vector2 newPos = newNode.position;
-								if (!closedList.Contains(newNode) || !closedList.Contains(newNode))
+								if (!closedList.Contains(newNode) || curNode == newNode)
 								{
 									Vector2 distance = (curpos - newPos);
-									newNode.costSoFar = curNode.costSoFar + 1;
 
-									if ((pos - newNode.position).magnitude < 1.6)
+									if (x == 1 || x == y)
 									{
-										newNode.dir = (pos - newPos).normalized;
+										newNode.costSoFar = curNode.costSoFar + 1;
+									}
+									else
+									{
+										newNode.costSoFar = curNode.costSoFar + 1.41f;
 									}
 
 									bool placed = false;
@@ -321,13 +333,18 @@ public class CreateMesh : MonoBehaviour {
 			}
 			openList.RemoveAt(0);
 		}
-
+		Debug.Log("Nodes processes: " + closedList.Count);
 			
 		foreach (nodeData nodeTemp in closedList)
 		{
 			if (!nodeTemp.unreachable)
 			{
 				nodeTemp.findSmallNeighbor();
+				Vector2	nodePos = nodeTemp.position;
+				if ((pos - nodePos).magnitude < 1.6)
+				{
+					nodeTemp.dir = (pos - nodePos).normalized;
+				}
 			}
 		}
 	}

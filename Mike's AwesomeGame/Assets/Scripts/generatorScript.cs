@@ -26,7 +26,6 @@ public class generatorScript : MonoBehaviour {
 
 		if ((gameManager.Instance.GetTransformPos() - pos.position).magnitude < range)
 		{
-			Debug.Log("starting");
 			if(onCooldown == false)
 			{
 				gameManager.Instance.sliderAddData(4,timeCount, charge);
